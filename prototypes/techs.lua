@@ -3,8 +3,8 @@ data:extend(
   {
     type = "technology",
     name = tech,
-    icon = "__"..modname.."__/graphics/tech/tech.png",
-	icon_size=128,
+    icon = "__"..modname.."__/graphics/technology/tech.png",
+	  icon_size=128,
     effects =
     {
       {
@@ -12,16 +12,17 @@ data:extend(
         recipe = recipe
       },
     },
-  prerequisites = {},
+    prerequisites = {"advanced-electronics-2","automated-rail-transportation","circuit-network"},
     unit =
     {
-      count = ,
+      count = 400,
       ingredients =
       {
-        {, },
+        {"automation-science-pack", 2.5},
+        {"logistic-science-pack", 2},
+        {"utility-science-pack", 1}
       },
-      time = 
-    },
-    order = ,
+      time = 20
+    }
   }
 })

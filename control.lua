@@ -8,7 +8,10 @@ table.insert(list_events.on_train_changed_state,function(event)
     if event.train.station and event.train.station then
         local list_networks={}
         for _,wire in pairs(wire_types) do
-            table.insert(list_networks,event.train.station.get_circuit_network(wire).network_id)
+            local circuit_network=event.train.station.get_circuit_network(wire)
+            if circuit_network then
+                table.insert(list_networks,circuit_network.network_id)
+            end
         end
 
         -- load lts entities

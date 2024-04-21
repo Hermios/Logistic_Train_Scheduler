@@ -25,6 +25,129 @@ custom_guis[prototype]={
                 }
             }},
             {
+                type="frame", direction="vertical",
+                tags={
+                    id="traincolor",
+                    children={
+                        {type="label",caption={"lts.gui-train-color-title"}},
+                        {type="frame",direction="horizontal",tags={
+                            children={
+                                {
+                                    type="label",
+                                    caption="R",
+                                    style="red_label"
+                                },
+                                {
+                                    type="slider",
+                                    minimum_value=0,
+                                    maximum_value=255,
+                                    tags={id="r",on_action="update_count"},
+                                    style="other_settings_slider",
+                                    discrete_slider=true,
+                                    name="slider"
+                                },{
+                                    type="textfield",
+                                    name="textfield",
+                                    numeric=true,
+                                    allow_negative=true,
+                                    tags={id="r",on_action="update_count"},
+                                    style="slider_value_textfield"
+                                }
+                            }
+                        }},
+                        {type="frame",direction="horizontal",tags={
+                            children={
+                                {
+                                    type="label",
+                                    caption="G",
+                                    style="green_label"
+                                },
+                                {
+                                    type="slider",
+                                    minimum_value=0,
+                                    maximum_value=255,
+                                    tags={id="g",on_action="update_count"},
+                                    style="other_settings_slider",
+                                    discrete_slider=true,
+                                    name="slider"
+                                },{
+                                    type="textfield",
+                                    name="textfield",
+                                    numeric=true,
+                                    allow_negative=true,
+                                    tags={id="g",on_action="update_count"},
+                                    style="slider_value_textfield"
+                                }
+                            }
+                        }},
+                        {type="frame",direction="horizontal",tags={
+                            children={
+                                {
+                                    type="label",
+                                    caption="B",
+                                    style="blue_label"
+                                },
+                                {
+                                    type="slider",
+                                    minimum_value=0,
+                                    maximum_value=255,
+                                    tags={id="b",on_action="update_count"},
+                                    style="other_settings_slider",
+                                    discrete_slider=true,
+                                    name="slider"
+                                },{
+                                    type="textfield",
+                                    name="textfield",
+                                    numeric=true,
+                                    allow_negative=true,
+                                    tags={id="b",on_action="update_count"},
+                                    style="slider_value_textfield"
+                                }
+                            }
+                        }},
+                    }
+                }
+            },
+            {
+                type="frame", direction="vertical",
+                tags={
+                    id="trainsignalsender",
+                    on_load="display_trainsignalsender",
+                    children={
+                        {type="label",caption={"gui-signal-title"}},
+                        {
+                            type="frame", direction="vertical",tags={
+                                id="parameters",
+                                model={
+                                    {
+                                        type="label",
+                                        tags={id="index",on_load="update_index_caption"},
+                                    },
+                                    {
+                                        type="choose-elem-button",
+                                        elem_type="signal",
+                                        tags={id="signal"}
+                                    },{
+                                        type="slider",
+                                        tags={id="count",on_action="update_count"},
+                                        style="other_settings_slider",
+                                        discrete_slider=true,
+                                        name="slider"
+                                    },{
+                                        type="textfield",
+                                        name="textfield",
+                                        numeric=true,
+                                        allow_negative=true,
+                                        tags={id="count",on_action="update_count"},
+                                        style="slider_value_textfield"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
                 type="frame",direction="vertical",tags={
                 id="schedule",
                 children={
@@ -65,6 +188,34 @@ custom_guis[prototype]={
         }
     }}
 }
+
+function display_trainsignalsender(lua_gui_element)
+    lua_gui_element.visible=(game.get_player(1).force.technologies["train-signal-sender"] or {}).researched
+end
+
+function update_index_caption(lua_gui_element)
+	lua_gui_element.caption=lua_gui_element.parent.tags.id
+end
+
+function update_count(lua_gui_element)
+	local frame=lua_gui_element.parent
+	if lua_gui_element.type=="slider" then
+        frame.textfield.text=tostring(lua_gui_element.slider_value)
+    elseif lua_gui_element.text~="" then
+        local value=tonumber(lua_gui_element.text)
+        if not value then
+            return
+        end
+        if frame.slider.get_slider_maximum() and value>frame.slider.get_slider_maximum() then
+            value=frame.slider.get_slider_maximum()
+        elseif frame.slider.get_slider_minimum() and value<frame.slider.get_slider_minimum() then
+            value=frame.slider.get_slider_minimum()
+        end
+        frame.slider.slider_value=tonumber(lua_gui_element.text)
+        frame.textfield.text=tostring(value)
+    end
+end
+
 function display_compare_type(lua_gui_element)
     lua_gui_element.visible=lua_gui_element.parent.get_index_in_parent()>2
 end
